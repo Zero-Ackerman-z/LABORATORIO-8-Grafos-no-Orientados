@@ -4,25 +4,27 @@ using UnityEngine;
 
 public class NodeControl : MonoBehaviour
 {
-    public List<NodeControl> adjacentNodes;
-    // Start is called before the first frame update
-    void Start()
+    public SimpleList<Connection> adjacentNodes;
+
+    void Awake()
     {
-        
+        adjacentNodes = new SimpleList<Connection>();
     }
 
-    // Update is called once per frame
-    void Update()
+    public void AddAdjacentNode(NodeControl node, float weight)
     {
-        
+        adjacentNodes.Add(new Connection { Node = node, Weight = weight });
     }
-    public void AddAdjacenNode(NodeControl node)
-    {
-        adjacentNodes.Add(node);
-    }
-    public NodeControl SelectRandomAdjacen()
+
+    public Connection SelectRandomAdjacent()
     {
         int index = Random.Range(0, adjacentNodes.Count);
-        return adjacentNodes[index];
+        return adjacentNodes.Get(index);
+    }
+
+    public class Connection
+    {
+        public NodeControl Node;
+        public float Weight;
     }
 }
