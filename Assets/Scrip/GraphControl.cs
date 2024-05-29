@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 public class GraphControl : MonoBehaviour
 {
     public GameObject nodePrefab;
@@ -10,6 +9,9 @@ public class GraphControl : MonoBehaviour
     public string[] currentNodePositions;
     public SimpleList<GameObject> allNodes;
     public TextAsset nodeConnectionsTxt;
+    public TextAsset nodeWeightsTxt;
+    public string[] arrayNodeWeights;
+    public string[] currentNodeWeights;
     public string[] arrayNodeConnections;
     public string[] currentNodeConnections;
     public EnemyControl enemy;
@@ -51,18 +53,22 @@ public class GraphControl : MonoBehaviour
         if (nodeConnectionsTxt != null)
         {
             arrayNodeConnections = nodeConnectionsTxt.text.Split('\n');
+            arrayNodeWeights = nodeWeightsTxt.text.Split('\n');
             for (int i = 0; i < arrayNodeConnections.Length; ++i)
             {
                 currentNodeConnections = arrayNodeConnections[i].Split(',');
                 NodeControl nodeControl = allNodes.Get(i).GetComponent<NodeControl>();
+                currentNodeWeights = arrayNodeWeights[i].Split(',');
+
                 for (int j = 0; j < currentNodeConnections.Length; ++j)
                 {
                     int connectionIndex = int.Parse(currentNodeConnections[j]);
                     if (connectionIndex < allNodes.Count)
                     {
+                        float weight = float.Parse(currentNodeWeights[j]);
+
                         NodeControl targetNode = allNodes.Get(connectionIndex).GetComponent<NodeControl>();
-                        nodeControl.AddAdjacentNode(targetNode, 10.0f); // Asigna un peso de 10.0
-                        targetNode.AddAdjacentNode(nodeControl, 10.0f); // Crea una conexión bidireccional con peso de 10.0
+                        nodeControl.AddAdjacentNode(targetNode, weight);
                     }
                     else
                     {
@@ -72,6 +78,7 @@ public class GraphControl : MonoBehaviour
             }
         }
     }
+
 
 
     void SelectInitialNode()
